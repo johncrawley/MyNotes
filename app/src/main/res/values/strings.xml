@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyNotes</string>
+    <string name="no_items_found">No Items found</string>
+    <string name="category_input_hint">Specify a new Category Name</string>
 </resources>

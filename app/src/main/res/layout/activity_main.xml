@@ -31,7 +31,7 @@ tools:context="com.jcrawley.mynotes.MainActivity">
 
 
 <ListView
-    android:id="@+id/list1"
+    android:id="@+id/categoryList"
     android:isScrollContainer="false"
     android:layout_width="match_parent"
     android:layout_height="0dp"
@@ -56,7 +56,7 @@ tools:context="com.jcrawley.mynotes.MainActivity">
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.5"
-    app:layout_constraintStart_toEndOf="@+id/list1"
+    app:layout_constraintStart_toEndOf="@+id/categoryList"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 

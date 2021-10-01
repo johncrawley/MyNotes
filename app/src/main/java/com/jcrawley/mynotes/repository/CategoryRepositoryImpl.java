@@ -26,7 +26,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public long create(String name) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DbContract.CategoriesEntry.COL_CATEGORY_NAME, name);
-        return addValuesToTable(DbContract.CategoriesEntry.TABLE_NAME, contentValues);
+        return DbUtils.addValuesToTable(db, DbContract.CategoriesEntry.TABLE_NAME, contentValues);
     }
 
 
@@ -34,6 +34,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public boolean exists(String name) {
         return false;
     }
+
 
     @Override
     public List<ListItem> getCategories() {
@@ -71,20 +72,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public boolean delete(String name) {
         return false;
-    }
-
-
-    long addValuesToTable(String tableName, ContentValues contentValues){
-        db.beginTransaction();
-        long id = -1;
-        try {
-            id = db.insertOrThrow(tableName, null, contentValues);
-            db.setTransactionSuccessful();
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        db.endTransaction();
-        return id;
     }
 
 }

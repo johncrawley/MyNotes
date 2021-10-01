@@ -25,16 +25,21 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     private static final String SQL_CREATE_CATEGORIES_TABLE =
-            CREATE_TABLE_IF_NOT_EXISTS + DbContract.CategoriesEntry.TABLE_NAME + OPENING_BRACKET +
-                    DbContract.CategoriesEntry._ID                          + INTEGER + PRIMARY_KEY + COMMA +
-                    DbContract.CategoriesEntry.COL_CATEGORY_NAME   + TEXT + CLOSING_BRACKET;
+            CREATE_TABLE_IF_NOT_EXISTS
+                    + DbContract.CategoriesEntry.TABLE_NAME
+                    + OPENING_BRACKET
+                    + DbContract.CategoriesEntry._ID + INTEGER + PRIMARY_KEY + COMMA
+                    + DbContract.CategoriesEntry.COL_CATEGORY_NAME + TEXT
+                    + CLOSING_BRACKET;
 
     private static final String SQL_CREATE_FILES_TABLE =
-            CREATE_TABLE_IF_NOT_EXISTS + DbContract.FilesEntry.TABLE_NAME + OPENING_BRACKET +
-                    DbContract.FilesEntry._ID + INTEGER + PRIMARY_KEY + COMMA +
-                    DbContract.FilesEntry.COL_NAME + TEXT + UNIQUE +  COMMA +
-                    DbContract.FilesEntry.COL_PATH + TEXT + COMMA +
-                    DbContract.FilesEntry.COL_CATEGORY_ID +  INTEGER + CLOSING_BRACKET;
+            CREATE_TABLE_IF_NOT_EXISTS + DbContract.FilesEntry.TABLE_NAME
+                    + OPENING_BRACKET
+                    + DbContract.FilesEntry._ID + INTEGER + PRIMARY_KEY + COMMA
+                    + DbContract.FilesEntry.COL_NAME + TEXT + COMMA
+                    + DbContract.FilesEntry.COL_PATH + TEXT + COMMA
+                    + DbContract.FilesEntry.COL_CATEGORY_ID +  INTEGER
+                    + CLOSING_BRACKET;
 
 
     private static final String SQL_DELETE_ENTRIES =

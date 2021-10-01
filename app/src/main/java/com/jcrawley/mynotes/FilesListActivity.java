@@ -2,7 +2,6 @@ package com.jcrawley.mynotes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,47 +12,47 @@ import android.widget.ListView;
 
 import com.jcrawley.mynotes.list.ListAdapterHelper;
 import com.jcrawley.mynotes.list.ListItem;
-import com.jcrawley.mynotes.repository.CategoryRepository;
 import com.jcrawley.mynotes.repository.CategoryRepositoryImpl;
+import com.jcrawley.mynotes.repository.FileRepository;
+import com.jcrawley.mynotes.repository.FileRepositoryImpl;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class FilesListActivity extends AppCompatActivity {
 
-
-    private CategoryRepository categoryRepository;
+    private FileRepository fileRepository;
+    private long categoryId;
+    private String categoryName;
     private ListAdapterHelper listAdapterHelper;
-    public final static String CATEGORY_NAME_TAG = "categoryName";
-    public final static String CATEGORY_ID_TAG =  "categoryId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        categoryRepository = new CategoryRepositoryImpl(this);
+        setContentView(R.layout.activity_files_list);
+        Intent intent = getIntent();
+        String categoryName = intent.getStringExtra(MainActivity.CATEGORY_NAME_TAG);
+        categoryId = intent.getLongExtra(MainActivity.CATEGORY_ID_TAG, -1);
+        fileRepository = new FileRepositoryImpl(this);
         ListView categoryList = findViewById(R.id.categoryList);
         listAdapterHelper = new ListAdapterHelper(this, categoryList,
-                listItem -> {
-                    Intent intent = new Intent(this, FilesListActivity.class);
-                    intent.putExtra(CATEGORY_NAME_TAG, listItem.getName());
-                    intent.putExtra(CATEGORY_ID_TAG, listItem.getId());
-                    startActivity(intent);},
+                listItem -> { startActivity(new Intent(this,FileEditActivity.class));},
                 listItem -> {});
         setupInputText();
         refreshListFromDb();
     }
 
 
+
     private void setupInputText(){
-        EditText addCategoryEditText = findViewById(R.id.addCategoryEditText);
+        EditText addCategoryEditText = findViewById(R.id.addFileEditText);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         addCategoryEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
 
                 String categoryName = v.getText().toString().trim();
-                long id = categoryRepository.create(categoryName);
-                listAdapterHelper.addToList(new ListItem(categoryName, id));
+                fileRepository.create(categoryName, categoryId);
+                listAdapterHelper.addToList(new ListItem(categoryName, categoryId));
                 addCategoryEditText.getText().clear();
                 imm.hideSoftInputFromWindow(addCategoryEditText.getWindowToken(), 0);
                 return true;
@@ -63,11 +62,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public void refreshListFromDb(){
-        List<ListItem> items = categoryRepository.getCategories();
+        List<ListItem> items = fileRepository.getFiles(categoryId);
         listAdapterHelper.setupList(items, android.R.layout.simple_list_item_1, findViewById(R.id.noResultsFoundText));
     }
-
 
 }

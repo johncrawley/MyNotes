@@ -32,13 +32,22 @@ public class DbHelper extends SQLiteOpenHelper {
                     + DbContract.CategoriesEntry.COL_CATEGORY_NAME + TEXT
                     + CLOSING_BRACKET;
 
-    private static final String SQL_CREATE_FILES_TABLE =
-            CREATE_TABLE_IF_NOT_EXISTS + DbContract.FilesEntry.TABLE_NAME
+    private static final String SQL_CREATE_DOCUMENTS_TABLE =
+            CREATE_TABLE_IF_NOT_EXISTS + DbContract.DocumentsEntry.TABLE_NAME
                     + OPENING_BRACKET
-                    + DbContract.FilesEntry._ID + INTEGER + PRIMARY_KEY + COMMA
-                    + DbContract.FilesEntry.COL_NAME + TEXT + COMMA
-                    + DbContract.FilesEntry.COL_PATH + TEXT + COMMA
-                    + DbContract.FilesEntry.COL_CATEGORY_ID +  INTEGER
+                    + DbContract.DocumentsEntry._ID + INTEGER + PRIMARY_KEY + COMMA
+                    + DbContract.DocumentsEntry.COL_NAME + TEXT + COMMA
+                    + DbContract.DocumentsEntry.COL_PATH + TEXT + COMMA
+                    + DbContract.DocumentsEntry.COL_CATEGORY_ID +  INTEGER
+                    + CLOSING_BRACKET;
+
+
+    private static final String SQL_CREATE_DOCUMENT_LINES_TABLE =
+            CREATE_TABLE_IF_NOT_EXISTS + DbContract.DocumentsEntry.TABLE_NAME
+                    + OPENING_BRACKET
+                    + DbContract.DocumentLinesEntry._ID + INTEGER + PRIMARY_KEY + COMMA
+                    + DbContract.DocumentLinesEntry.COL_CONTENTS + TEXT + COMMA
+                    + DbContract.DocumentLinesEntry.COL_DOCUMENT_ID + INTEGER
                     + CLOSING_BRACKET;
 
 
@@ -60,7 +69,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_CATEGORIES_TABLE);
-        db.execSQL(SQL_CREATE_FILES_TABLE);
+        db.execSQL(SQL_CREATE_DOCUMENTS_TABLE);
+        db.execSQL(SQL_CREATE_DOCUMENT_LINES_TABLE);
     }
 
 

@@ -24,9 +24,9 @@ public class FileRepositoryImpl implements  FileRepository {
 
     @Override
     public boolean exists(String filename, long categoryId) {
-        String query =  "SELECT * FROM " + DbContract.FilesEntry.TABLE_NAME
-                + " WHERE " + DbContract.FilesEntry.COL_NAME + " = "  + inBrackets(filename)
-                + " AND " + DbContract.FilesEntry.COL_CATEGORY_ID +  " = " + categoryId + ";";
+        String query =  "SELECT * FROM " + DbContract.DocumentsEntry.TABLE_NAME
+                + " WHERE " + DbContract.DocumentsEntry.COL_NAME + " = "  + inBrackets(filename)
+                + " AND " + DbContract.DocumentsEntry.COL_CATEGORY_ID +  " = " + categoryId + ";";
         Cursor cursor = db.rawQuery(query, null);
         boolean doesFileAlreadyExist =  cursor.getCount() != 0;
         cursor.close();
@@ -44,7 +44,7 @@ public class FileRepositoryImpl implements  FileRepository {
         if(exists(filename, categoryId)){
             return false;
         }
-        DbUtils.addValuesToTable(db, DbContract.FilesEntry.TABLE_NAME, createContentValuesFor(categoryId, filename));
+        DbUtils.addValuesToTable(db, DbContract.DocumentsEntry.TABLE_NAME, createContentValuesFor(categoryId, filename));
         return true;
     }
 
@@ -52,8 +52,8 @@ public class FileRepositoryImpl implements  FileRepository {
     public List<ListItem> getFiles(long categoryId) {
         List<ListItem> listItems = new ArrayList<>();
         Cursor cursor;
-        String query = "SELECT * FROM " + DbContract.FilesEntry.TABLE_NAME
-                + " WHERE " + DbContract.FilesEntry.COL_CATEGORY_ID + " = " + categoryId + ";";
+        String query = "SELECT * FROM " + DbContract.DocumentsEntry.TABLE_NAME
+                + " WHERE " + DbContract.DocumentsEntry.COL_CATEGORY_ID + " = " + categoryId + ";";
 
         try {
             cursor = db.rawQuery(query, null);
@@ -74,8 +74,8 @@ public class FileRepositoryImpl implements  FileRepository {
 
     private ContentValues createContentValuesFor(long categoryId, String filename){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DbContract.FilesEntry.COL_NAME, filename);
-        contentValues.put(DbContract.FilesEntry.COL_CATEGORY_ID, categoryId);
+        contentValues.put(DbContract.DocumentsEntry.COL_NAME, filename);
+        contentValues.put(DbContract.DocumentsEntry.COL_CATEGORY_ID, categoryId);
         return contentValues;
     }
 

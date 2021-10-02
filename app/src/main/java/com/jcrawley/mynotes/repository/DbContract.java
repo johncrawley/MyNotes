@@ -12,11 +12,18 @@ public final class DbContract {
     }
 
 
-    static class FilesEntry implements BaseColumns {
-        static final String TABLE_NAME = "Files";
+    static class DocumentsEntry implements BaseColumns {
+        static final String TABLE_NAME = "Documents";
         static final String COL_PATH = "path";
         static final String COL_NAME = "name";
         static final String COL_CATEGORY_ID = "category_id";
+    }
+
+
+    static class DocumentLinesEntry implements BaseColumns {
+        static final String TABLE_NAME = "Document_lines";
+        static final String COL_DOCUMENT_ID = "document_id";
+        static final String COL_CONTENTS = "contents";
     }
 
 }

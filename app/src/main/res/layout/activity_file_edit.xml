@@ -9,6 +9,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/scrollview"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp">
 
@@ -26,12 +27,34 @@
                 android:inputType="textPersonName"
                 android:singleLine="false"
                 android:text="Name" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
         </LinearLayout>/>
     </ScrollView>
+    <ListView
+        android:id="@+id/documentLinesList"
+        android:isScrollContainer="false"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollview"
+        />
+
+
+    <TextView
+        android:id="@+id/noResultsFoundText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/no_items_found"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/documentLinesList"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

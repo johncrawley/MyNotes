@@ -1,5 +1,6 @@
 package com.jcrawley.mynotes.repository;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -41,12 +42,15 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
             return listItems;
         }
         cursor.close();
-        return  listItems;
+        return listItems;
     }
 
     @Override
-    public void add(String contents) {
-
+    public void add(String contents, long documentId) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DbContract.DocumentLinesEntry.COL_DOCUMENT_ID, documentId);
+        contentValues.put(DbContract.DocumentLinesEntry.COL_CONTENTS, contents);
+        DbUtils.addValuesToTable(db, DbContract.DocumentLinesEntry.TABLE_NAME, contentValues);
     }
 
     @Override

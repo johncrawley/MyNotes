@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.jcrawley.mynotes.list.ListAdapterHelper;
 import com.jcrawley.mynotes.list.ListItem;
-import com.jcrawley.mynotes.repository.CategoryRepositoryImpl;
 import com.jcrawley.mynotes.repository.FileRepository;
 import com.jcrawley.mynotes.repository.FileRepositoryImpl;
 
@@ -25,6 +24,10 @@ public class FilesListActivity extends AppCompatActivity {
     private String categoryName;
     private ListAdapterHelper listAdapterHelper;
 
+    public final static String DOCUMENT_NAME_TAG = "documentName";
+    public final static String DOCUMENT_ID_TAG =  "documentId";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +38,15 @@ public class FilesListActivity extends AppCompatActivity {
         fileRepository = new FileRepositoryImpl(this);
         ListView categoryList = findViewById(R.id.categoryList);
         listAdapterHelper = new ListAdapterHelper(this, categoryList,
-                listItem -> { startActivity(new Intent(this,FileEditActivity.class));},
+                listItem -> {
+                    Intent editFileIntent = new Intent(this,FileEditActivity.class);
+                    editFileIntent.putExtra(DOCUMENT_NAME_TAG, listItem.getName());
+                    editFileIntent.putExtra(DOCUMENT_ID_TAG, listItem.getId());
+                    startActivity(editFileIntent);},
                 listItem -> {});
         setupInputText();
         refreshListFromDb();
     }
-
 
 
     private void setupInputText(){

@@ -43,7 +43,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     private static final String SQL_CREATE_DOCUMENT_LINES_TABLE =
-            CREATE_TABLE_IF_NOT_EXISTS + DbContract.DocumentsEntry.TABLE_NAME
+            CREATE_TABLE_IF_NOT_EXISTS + DbContract.DocumentLinesEntry.TABLE_NAME
                     + OPENING_BRACKET
                     + DbContract.DocumentLinesEntry._ID + INTEGER + PRIMARY_KEY + COMMA
                     + DbContract.DocumentLinesEntry.COL_CONTENTS + TEXT + COMMA

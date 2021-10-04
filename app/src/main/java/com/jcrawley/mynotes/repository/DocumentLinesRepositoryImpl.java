@@ -32,8 +32,8 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
         try {
             cursor = db.rawQuery(query, null);
             while(cursor.moveToNext()){
-                String text = getString(cursor, DbContract.CategoriesEntry.COL_CATEGORY_NAME);
-                long id = getLong(cursor, DbContract.CategoriesEntry._ID);
+                String text = getString(cursor, DbContract.DocumentLinesEntry.COL_CONTENTS);
+                long id = getLong(cursor, DbContract.DocumentLinesEntry._ID);
                 listItems.add(new ListItem(text, id));
             }
         }
@@ -42,8 +42,10 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
             return listItems;
         }
         cursor.close();
+        System.out.println("DocLinesRepository.getDocumentLines() list items size: " + listItems.size());
         return listItems;
     }
+
 
     @Override
     public void add(String contents, long documentId) {
@@ -53,17 +55,17 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
         DbUtils.addValuesToTable(db, DbContract.DocumentLinesEntry.TABLE_NAME, contentValues);
     }
 
+
     @Override
     public void edit(long id, String contents) {
 
     }
 
+
     @Override
     public void delete(long id) {
 
     }
-
-
 
 
     private String getString(Cursor cursor, String name){

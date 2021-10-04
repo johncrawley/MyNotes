@@ -75,6 +75,9 @@ public class FileEditActivity extends AppCompatActivity {
 
     public void refreshListFromDb(){
         List<ListItem> items = documentLinesRepository.getDocumentLines(documentId);
+        for(ListItem item : items){
+            System.out.println("Item :" +  item.getId() + "  "  + item.getName());
+        }
         listAdapterHelper.setupList(items, android.R.layout.simple_list_item_1, findViewById(R.id.noResultsFoundText));
     }
 

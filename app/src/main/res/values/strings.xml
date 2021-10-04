@@ -2,5 +2,9 @@
     <string name="app_name">MyNotes</string>
     <string name="no_items_found">No Items found</string>
     <string name="edit_text_create_category_hint">Specify a new Category Name</string>
-    <string name="edit_text_create_file_hint">Specify a new Document Name</string>
+    <string name="edit_text_create_document_hint">Specify a new Document Name</string>
+    <string name="edit_text_edit_line_hint">Add or Edit Line</string>
+
+    <string name="menu_action_new_document_line">Create a new line</string>
+    <string name="menu_action_delete_selected_line">Delete selected line</string>
 </resources>

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -27,6 +29,9 @@ public class FileEditActivity extends AppCompatActivity {
     private long documentId;
     private ListAdapterHelper listAdapterHelper;
     private long currentDocumentId;
+    private ListItem selectedListItem;
+    private EditText lineEditText;
+    private ListView documentLinesList;
 
     FileHandler fileHandler;
 
@@ -36,21 +41,58 @@ public class FileEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_edit);
         fileHandler = new FileHandler(this);
+        lineEditText = findViewById(R.id.editTextFileContents);
+        lineEditText.setText(fileHandler.getFileContents());
+
         String contents = fileHandler.readFileFromInternalStorage(testCategoryName, testFileName);
         documentLinesRepository = new DocumentLinesRepositoryImpl(this);
         Intent intent = getIntent();
-        ListView documentLinesList = findViewById(R.id.documentLinesList);
+        documentLinesList = findViewById(R.id.documentLinesList);
         documentId = intent.getLongExtra(FilesListActivity.DOCUMENT_ID_TAG, -1);
         listAdapterHelper = new ListAdapterHelper(this, documentLinesList,
-                listItem -> {},
+                listItem -> {
+                    selectedListItem = listItem;
+                    lineEditText.setText(listItem.getName());
+                },
                 listItem -> {});
 
-
-
-        EditText editText = findViewById(R.id.editTextFileContents);
-        editText.setText(fileHandler.getFileContents());
         setupInputText();
         refreshListFromDb();
+    }
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_document, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_new_line){
+
+        }
+        else if(id == R.id.action_delete_selected_line){
+            deleteCurrentlySelectedLine();
+        }
+        return true;
+    }
+
+
+    private void deleteCurrentlySelectedLine(){
+        if(selectedListItem == null){
+            System.out.println("FileEditActivity.deleteCurrentlySelectedLine(), " +
+                    "selectListItem is null!");
+            return;
+        }
+        System.out.println("About to delete the selectedListItem with id: " + selectedListItem.getId());
+        documentLinesRepository.delete(selectedListItem.getId());
+        listAdapterHelper.deleteFromList(selectedListItem);
+        listAdapterHelper.clearSelection();
     }
 
 

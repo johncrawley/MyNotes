@@ -33,8 +33,10 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
             cursor = db.rawQuery(query, null);
             while(cursor.moveToNext()){
                 String text = getString(cursor, DbContract.DocumentLinesEntry.COL_CONTENTS);
-                long id = getLong(cursor, DbContract.DocumentLinesEntry._ID);
-                listItems.add(new ListItem(text, id));
+                long docId = getLong(cursor, DbContract.DocumentLinesEntry.COL_DOCUMENT_ID);
+                long entryId = getLong(cursor, DbContract.DocumentLinesEntry._ID);
+                System.out.println("getting document line item, contents: " + text + " ,id: " + entryId);
+                listItems.add(new ListItem(text, entryId));
             }
         }
         catch(SQLException e){
@@ -63,8 +65,19 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
 
 
     @Override
-    public void delete(long id) {
-
+    public void delete(long lineId) {
+        System.out.println("Deleting document line with lineID : " + lineId);
+        String query = "DELETE FROM "
+                + DbContract.DocumentLinesEntry.TABLE_NAME
+                + " WHERE " + DbContract.DocumentLinesEntry._ID
+                + " = "  + lineId
+                + ";";
+        try {
+           db.execSQL(query);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
 

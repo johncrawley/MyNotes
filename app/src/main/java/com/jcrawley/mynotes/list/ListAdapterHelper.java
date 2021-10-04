@@ -43,6 +43,7 @@ public class ListAdapterHelper {
         return false;
     }
 
+
     public void setupList(final List<ListItem> items, int layoutRes, View noResultsFoundView){
         if(list == null){
             return;
@@ -50,12 +51,12 @@ public class ListAdapterHelper {
         arrayAdapter = new ListItemArrayAdapter(context, layoutRes, items);
 
         AdapterView.OnItemLongClickListener longClickListener = (parent, view, position, id) -> {
-            if(position >= items.size()){
-                return false;
+            if(position < items.size()){
+                ListItem item = items.get(position);
+                longClickConsumer.accept(item);
+                return true;
             }
-            ListItem item = items.get(position);
-            longClickConsumer.accept(item);
-            return true;
+            return false;
         };
 
 
@@ -106,4 +107,13 @@ public class ListAdapterHelper {
         return false;
     }
 
+    public void deleteFromList(ListItem listItem){
+        arrayAdapter.remove(listItem);
+    }
+
+    public void clearSelection(){
+        list.clearChoices();
+        list.clearFocus();
+        arrayAdapter.notifyDataSetChanged();
+    }
 }

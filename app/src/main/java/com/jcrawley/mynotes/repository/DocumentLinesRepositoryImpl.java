@@ -22,6 +22,7 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
         db = dbHelper.getWritableDatabase();
     }
 
+
     @Override
     public List<ListItem> getDocumentLines(long documentId) {
         List<ListItem> listItems = new ArrayList<>();
@@ -73,12 +74,48 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
                 + " = "  + lineId
                 + ";";
         try {
-           db.execSQL(query);
+            db.execSQL(query);
         }
         catch(SQLException e){
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    public void deleteAllWithDocumentId(long documentId) {
+        String query = "DELETE FROM "
+                + DbContract.DocumentLinesEntry.TABLE_NAME
+                + " WHERE " + DbContract.DocumentLinesEntry.COL_DOCUMENT_ID
+                + " = "  + documentId
+                + ";";
+        try {
+            db.execSQL(query);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteAllWithCategoryId(long categoryId) {
+        String query = "DELETE X FROM  "
+                + DbContract.DocumentLinesEntry.TABLE_NAME  + " X "
+                + " INNER JOIN " + DbContract.DocumentsEntry.TABLE_NAME + " Y "
+                + " ON  X." + DbContract.DocumentLinesEntry.COL_DOCUMENT_ID
+                + " = Y."  + DbContract.DocumentsEntry._ID
+                + " WHERE Y." + DbContract.DocumentsEntry.COL_CATEGORY_ID
+                + " = "  + categoryId
+                + ";";
+        try {
+            db.execSQL(query);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+
 
 
     private String getString(Cursor cursor, String name){

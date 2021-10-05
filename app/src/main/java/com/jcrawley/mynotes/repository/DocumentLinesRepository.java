@@ -9,4 +9,6 @@ public interface DocumentLinesRepository {
    void add(String contents, long documentId);
    void edit(long id, String contents);
    void delete(long id);
+   void deleteAllWithDocumentId(long documentId);
+   void deleteAllWithCategoryId(long categoryId);
 }

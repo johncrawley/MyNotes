@@ -9,5 +9,5 @@ public interface CategoryRepository {
     long create(String name);
     boolean exists(String name);
     List<ListItem> getCategories();
-    boolean delete(String name);
+    boolean delete(long categoryId);
 }

@@ -14,11 +14,12 @@ import java.util.List;
 public class CategoryRepositoryImpl implements CategoryRepository {
 
     private final SQLiteDatabase db;
-
+    private final DocumentRepository documentRepository;
 
     public CategoryRepositoryImpl(Context context){
         DbHelper dbHelper = DbHelper.getInstance(context);
         db = dbHelper.getWritableDatabase();
+        documentRepository = new DocumentRepositoryImpl(context);
     }
 
 
@@ -70,7 +71,19 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
 
     @Override
-    public boolean delete(String name) {
+    public boolean delete(long categoryId) {
+        documentRepository.deleteAllWithCategoryId(categoryId);
+        String deleteDocumentQuery = "DELETE FROM "
+                + DbContract.CategoriesEntry.TABLE_NAME
+                + " WHERE " + DbContract.CategoriesEntry._ID
+                + " = "  + categoryId
+                + ";";
+        try {
+            db.execSQL(deleteDocumentQuery);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
         return false;
     }
 

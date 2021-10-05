@@ -12,14 +12,14 @@ import android.widget.ListView;
 
 import com.jcrawley.mynotes.list.ListAdapterHelper;
 import com.jcrawley.mynotes.list.ListItem;
-import com.jcrawley.mynotes.repository.FileRepository;
-import com.jcrawley.mynotes.repository.FileRepositoryImpl;
+import com.jcrawley.mynotes.repository.DocumentRepository;
+import com.jcrawley.mynotes.repository.DocumentRepositoryImpl;
 
 import java.util.List;
 
 public class FilesListActivity extends AppCompatActivity {
 
-    private FileRepository fileRepository;
+    private DocumentRepository fileRepository;
     private long categoryId;
     private String categoryName;
     private ListAdapterHelper listAdapterHelper;
@@ -35,7 +35,7 @@ public class FilesListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String categoryName = intent.getStringExtra(MainActivity.CATEGORY_NAME_TAG);
         categoryId = intent.getLongExtra(MainActivity.CATEGORY_ID_TAG, -1);
-        fileRepository = new FileRepositoryImpl(this);
+        fileRepository = new DocumentRepositoryImpl(this);
         ListView categoryList = findViewById(R.id.categoryList);
         listAdapterHelper = new ListAdapterHelper(this, categoryList,
                 listItem -> {

@@ -11,14 +11,16 @@ import com.jcrawley.mynotes.list.ListItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileRepositoryImpl implements  FileRepository {
+public class DocumentRepositoryImpl implements DocumentRepository {
 
     private final SQLiteDatabase db;
+    private final DocumentLinesRepository documentLinesRepository;
 
 
-    public FileRepositoryImpl(Context context){
+    public DocumentRepositoryImpl(Context context){
         DbHelper dbHelper = DbHelper.getInstance(context);
         db = dbHelper.getWritableDatabase();
+        documentLinesRepository = new DocumentLinesRepositoryImpl(context);
     }
 
 
@@ -81,9 +83,21 @@ public class FileRepositoryImpl implements  FileRepository {
 
 
     @Override
-    public boolean delete(String filename, long categoryId) {
-        return false;
+    public void delete(long documentId) {
+        documentLinesRepository.deleteAllWithDocumentId(documentId);
+        String deleteDocumentQuery = "DELETE FROM "
+                + DbContract.DocumentsEntry.TABLE_NAME
+                + " WHERE " + DbContract.DocumentsEntry._ID
+                + " = "  + documentId
+                + ";";
+        try {
+            db.execSQL(deleteDocumentQuery);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }
+
 
     @Override
     public String getFilepath(String filename, long categoryId) {
@@ -91,6 +105,21 @@ public class FileRepositoryImpl implements  FileRepository {
     }
 
 
+    @Override
+    public void deleteAllWithCategoryId(long categoryId) {
+        documentLinesRepository.deleteAllWithCategoryId(categoryId);
+        String deleteDocumentQuery = "DELETE FROM "
+                + DbContract.DocumentsEntry.TABLE_NAME
+                + " WHERE " + DbContract.DocumentsEntry.COL_CATEGORY_ID
+                + " = "  + categoryId
+                + ";";
+        try {
+            db.execSQL(deleteDocumentQuery);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
 
 
     private String getString(Cursor cursor, String name){

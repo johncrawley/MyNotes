@@ -100,16 +100,10 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
 
     @Override
     public void deleteAllWithCategoryId(long categoryId) {
-        String query = "DELETE X FROM  "
-                + DbContract.DocumentLinesEntry.TABLE_NAME  + " X "
-                + " INNER JOIN " + DbContract.DocumentsEntry.TABLE_NAME + " Y "
-                + " ON  X." + DbContract.DocumentLinesEntry.COL_DOCUMENT_ID
-                + " = Y."  + DbContract.DocumentsEntry._ID
-                + " WHERE Y." + DbContract.DocumentsEntry.COL_CATEGORY_ID
-                + " = "  + categoryId
-                + ";";
         try {
-            db.execSQL(query);
+            db.delete(DbContract.DocumentLinesEntry.TABLE_NAME,
+                    "document_id IN ( SELECT _id FROM Documents WHERE category_id = ? );",
+                    new String[]{String.valueOf(categoryId)});
         }
         catch(SQLException e){
             e.printStackTrace();

@@ -2,10 +2,11 @@ package com.jcrawley.mynotes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -20,11 +21,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private CategoryRepository categoryRepository;
     private ListAdapterHelper listAdapterHelper;
     public final static String CATEGORY_NAME_TAG = "categoryName";
     public final static String CATEGORY_ID_TAG =  "categoryId";
+    private long selectedCategoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +39,36 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra(CATEGORY_NAME_TAG, listItem.getName());
                     intent.putExtra(CATEGORY_ID_TAG, listItem.getId());
                     startActivity(intent);},
-                listItem -> {});
+                listItem -> {
+                    selectedCategoryId = listItem.getId();
+                });
         setupInputText();
         refreshListFromDb();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.category, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_delete_selected_category){
+            deleteCurrentlySelectedCategory();
+        }
+        return true;
+    }
+
+
+    public void deleteCurrentlySelectedCategory(){
+        if(selectedCategoryId != -1){
+            categoryRepository.delete(selectedCategoryId);
+            refreshListFromDb();
+        }
     }
 
 
@@ -61,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
     }
-
 
 
     public void refreshListFromDb(){

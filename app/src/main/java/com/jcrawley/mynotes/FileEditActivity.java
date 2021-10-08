@@ -23,8 +23,6 @@ import java.util.List;
 public class FileEditActivity extends AppCompatActivity {
 
 
-    private final String testCategoryName="testCategory";
-    private final String testFileName= "test";
     private DocumentLinesRepository documentLinesRepository;
     private long documentId;
     private ListAdapterHelper listAdapterHelper;

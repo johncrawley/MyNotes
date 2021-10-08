@@ -42,16 +42,17 @@ public class DocumentRepositoryImpl implements DocumentRepository {
 
 
     @Override
-    public boolean create(String filename, long categoryId) {
-        if(exists(filename, categoryId)){
-            return false;
-        }
-        DbUtils.addValuesToTable(db, DbContract.DocumentsEntry.TABLE_NAME, createContentValuesFor(categoryId, filename));
-        return true;
+    public long create(String documentName, long categoryId) {
+
+        return exists(documentName, categoryId) ?
+                -1
+                : DbUtils.addValuesToTable(db, DbContract.DocumentsEntry.TABLE_NAME,
+                createContentValuesFor(categoryId, documentName));
     }
 
+
     @Override
-    public List<ListItem> getFiles(long categoryId) {
+    public List<ListItem> getDocuments(long categoryId) {
         List<ListItem> listItems = new ArrayList<>();
         Cursor cursor;
         String query = "SELECT * FROM " + DbContract.DocumentsEntry.TABLE_NAME
@@ -60,8 +61,8 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         try {
             cursor = db.rawQuery(query, null);
             while(cursor.moveToNext()){
-                String text = getString(cursor, DbContract.CategoriesEntry.COL_CATEGORY_NAME);
-                long id = getLong(cursor, DbContract.CategoriesEntry._ID);
+                String text = getString(cursor, DbContract.DocumentsEntry.COL_NAME);
+                long id = getLong(cursor, DbContract.DocumentsEntry._ID);
                 listItems.add(new ListItem(text, id));
             }
         }
@@ -71,14 +72,6 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         }
         cursor.close();
         return  listItems;
-    }
-
-
-    private ContentValues createContentValuesFor(long categoryId, String filename){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DbContract.DocumentsEntry.COL_NAME, filename);
-        contentValues.put(DbContract.DocumentsEntry.COL_CATEGORY_ID, categoryId);
-        return contentValues;
     }
 
 
@@ -119,6 +112,14 @@ public class DocumentRepositoryImpl implements DocumentRepository {
         catch(SQLException e){
             e.printStackTrace();
         }
+    }
+
+
+    private ContentValues createContentValuesFor(long categoryId, String filename){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DbContract.DocumentsEntry.COL_NAME, filename);
+        contentValues.put(DbContract.DocumentsEntry.COL_CATEGORY_ID, categoryId);
+        return contentValues;
     }
 
 

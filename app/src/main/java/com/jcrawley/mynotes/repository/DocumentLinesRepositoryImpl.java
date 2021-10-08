@@ -97,6 +97,7 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
         }
     }
 
+
     @Override
     public void deleteAllWithCategoryId(long categoryId) {
         String query = "DELETE X FROM  "
@@ -114,8 +115,6 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
             e.printStackTrace();
         }
     }
-
-
 
 
     private String getString(Cursor cursor, String name){

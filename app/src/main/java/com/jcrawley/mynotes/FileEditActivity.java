@@ -44,7 +44,6 @@ public class FileEditActivity extends AppCompatActivity {
         lineEditText = findViewById(R.id.editTextFileContents);
         lineEditText.setText(fileHandler.getFileContents());
 
-        String contents = fileHandler.readFileFromInternalStorage(testCategoryName, testFileName);
         documentLinesRepository = new DocumentLinesRepositoryImpl(this);
         Intent intent = getIntent();
         documentLinesList = findViewById(R.id.documentLinesList);
@@ -59,8 +58,6 @@ public class FileEditActivity extends AppCompatActivity {
         setupInputText();
         refreshListFromDb();
     }
-
-
 
 
     @Override
@@ -85,11 +82,8 @@ public class FileEditActivity extends AppCompatActivity {
 
     private void deleteCurrentlySelectedLine(){
         if(selectedListItem == null){
-            System.out.println("FileEditActivity.deleteCurrentlySelectedLine(), " +
-                    "selectListItem is null!");
             return;
         }
-        System.out.println("About to delete the selectedListItem with id: " + selectedListItem.getId());
         documentLinesRepository.delete(selectedListItem.getId());
         listAdapterHelper.deleteFromList(selectedListItem);
         listAdapterHelper.clearSelection();

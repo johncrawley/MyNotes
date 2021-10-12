@@ -1,10 +1,15 @@
 package com.jcrawley.mynotes;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
@@ -17,19 +22,18 @@ import com.jcrawley.mynotes.list.ListItem;
 import com.jcrawley.mynotes.repository.DocumentLinesRepository;
 import com.jcrawley.mynotes.repository.DocumentLinesRepositoryImpl;
 import com.jcrawley.mynotes.repository.FileHandler;
+import com.jcrawley.mynotes.viewModel.EditDocumentViewModel;
 
 import java.util.List;
 
-public class FileEditActivity extends AppCompatActivity {
+public class FileEditActivity extends AppCompatActivity implements CustomDialogCloseListener {
 
 
     private DocumentLinesRepository documentLinesRepository;
     private long documentId;
     private ListAdapterHelper listAdapterHelper;
-    private long currentDocumentId;
-    private ListItem selectedListItem;
     private EditText lineEditText;
-    private ListView documentLinesList;
+    private EditDocumentViewModel viewModel;
 
     FileHandler fileHandler;
 
@@ -39,24 +43,50 @@ public class FileEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_edit);
         fileHandler = new FileHandler(this);
-        lineEditText = findViewById(R.id.editTextFileContents);
-        lineEditText.setText(fileHandler.getFileContents());
-
+        setupLineEditText();
+        viewModel = new ViewModelProvider(this).get(EditDocumentViewModel.class);
+        setupDialogDimensions();
         documentLinesRepository = new DocumentLinesRepositoryImpl(this);
-        Intent intent = getIntent();
-        documentLinesList = findViewById(R.id.documentLinesList);
-        documentId = intent.getLongExtra(FilesListActivity.DOCUMENT_ID_TAG, -1);
-        listAdapterHelper = new ListAdapterHelper(this, documentLinesList,
-                listItem -> {
-                    selectedListItem = listItem;
-                    lineEditText.setText(listItem.getName());
-                },
-                listItem -> {});
-
+        assignDocumentId();
+        setupList();
         setupInputText();
         refreshListFromDb();
     }
 
+
+    public void setupLineEditText(){
+        lineEditText = findViewById(R.id.editTextFileContents);
+        lineEditText.setText(fileHandler.getFileContents());
+    }
+
+
+    public void assignDocumentId(){
+        Intent intent = getIntent();
+        documentId = intent.getLongExtra(FilesListActivity.DOCUMENT_ID_TAG, -1);
+    }
+
+
+     private void setupList(){
+
+         ListView documentLinesList = findViewById(R.id.documentLinesList);
+         listAdapterHelper = new ListAdapterHelper(this, documentLinesList,
+                 listItem -> {
+                     viewModel.selectedListItem = listItem;
+                     log("setupList() clicked listItem, viewModel selectedListItem contents is now: " + viewModel.selectedListItem.getName());
+                 },
+                 listItem -> {});
+     }
+
+     private void log(String msg){
+        System.out.println("^^^ FileEditActivity: " + msg);
+     }
+
+    public void setupDialogDimensions(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        viewModel.dialogWidth =(int)(displayMetrics.widthPixels /1.5f);
+        viewModel.dialogHeight=(int)(displayMetrics.heightPixels / 2f);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,8 +98,8 @@ public class FileEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_new_line){
-
+        if(id == R.id.action_edit_line){
+            startDialogFragment();
         }
         else if(id == R.id.action_delete_selected_line){
             deleteCurrentlySelectedLine();
@@ -78,12 +108,19 @@ public class FileEditActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void handleDialogClose(DialogInterface dialogInterface, String updatedLine) {
+        listAdapterHelper.notifyChanges();
+        documentLinesRepository.update(viewModel.selectedListItem.getId(), documentId, updatedLine);
+    }
+
+
     private void deleteCurrentlySelectedLine(){
-        if(selectedListItem == null){
+        if(viewModel.selectedListItem == null){
             return;
         }
-        documentLinesRepository.delete(selectedListItem.getId());
-        listAdapterHelper.deleteFromList(selectedListItem);
+        documentLinesRepository.delete(viewModel.selectedListItem.getId());
+        listAdapterHelper.deleteFromList(viewModel.selectedListItem);
         listAdapterHelper.clearSelection();
     }
 
@@ -95,8 +132,6 @@ public class FileEditActivity extends AppCompatActivity {
         fileContentsEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 String contents = v.getText().toString().trim();
-                //fileHandler.writeFileOnInternalStorage(testCategoryName, testFileName, contents);
-                //  fileHandler.saveFileContents();
                 documentLinesRepository.add(contents, documentId);
                 listAdapterHelper.addToList(new ListItem(contents, documentId));
                 imm.hideSoftInputFromWindow(fileContentsEditText.getWindowToken(), 0);
@@ -115,6 +150,22 @@ public class FileEditActivity extends AppCompatActivity {
         listAdapterHelper.setupList(items, android.R.layout.simple_list_item_1, findViewById(R.id.noResultsFoundText));
     }
 
+
+    private void startDialogFragment(){
+        if(viewModel.selectedListItem == null){
+            return;
+        }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        EditLineDialogFragment configureDialogFragment = EditLineDialogFragment.newInstance();
+
+        configureDialogFragment.show(ft, "dialog");
+    }
 
 
 

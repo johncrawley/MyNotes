@@ -60,8 +60,23 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
 
 
     @Override
-    public void edit(long id, String contents) {
+    public void update(long lineId, long documentId, String contents) {
 
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DbContract.DocumentLinesEntry.COL_DOCUMENT_ID, documentId);
+        contentValues.put(DbContract.DocumentLinesEntry.COL_CONTENTS, contents);
+
+        String[] args = {String.valueOf(lineId)};
+
+        try {
+            db.update(DbContract.DocumentLinesEntry.TABLE_NAME,
+                   contentValues, DbContract.DocumentLinesEntry._ID + " = ?", args);
+        }
+        catch(SQLException e){
+            System.out.println("^^^ Error updating document line");
+            System.out.println("^^^ " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 

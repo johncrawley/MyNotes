@@ -7,4 +7,6 @@
 
     <string name="menu_action_new_document_line">Create a new line</string>
     <string name="menu_action_delete_selected_line">Delete selected line</string>
+
+    <string name="update_line_dialog_text_hint">Edit Line</string>
 </resources>

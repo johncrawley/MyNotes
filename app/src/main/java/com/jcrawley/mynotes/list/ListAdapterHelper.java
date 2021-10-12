@@ -18,7 +18,7 @@ public class ListAdapterHelper {
     private final ListView list;
     private final Consumer<ListItem> clickConsumer;
     private final Consumer<ListItem> longClickConsumer;
-
+    private int selectedIndex;
 
     public ListAdapterHelper(Context context, ListView list,
                              Consumer<ListItem> clickConsumer,
@@ -64,9 +64,9 @@ public class ListAdapterHelper {
             if(position >= items.size()){
                 return;
             }
+            selectedIndex = position;
             clickConsumer.accept(items.get(position));
         };
-
 
         list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         list.setAdapter(arrayAdapter);
@@ -74,6 +74,10 @@ public class ListAdapterHelper {
         setupEmptyView(noResultsFoundView);
         list.setOnItemLongClickListener(longClickListener);
         list.setOnItemClickListener(clickListener);
+    }
+
+    public void notifyChanges(){
+        arrayAdapter.notifyDataSetChanged();
     }
 
 
@@ -90,6 +94,13 @@ public class ListAdapterHelper {
             return;
         }
         arrayAdapter.add(item);
+    }
+
+    public void updateSelectedItem(String contents){
+        ListItem selectedItem = arrayAdapter.getItem(selectedIndex);
+        if(selectedItem != null){
+            selectedItem.setName(contents);
+        }
     }
 
 

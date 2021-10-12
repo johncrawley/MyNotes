@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_new_line"
-        android:icon="@android:drawable/ic_menu_add"
+        android:id="@+id/action_edit_line"
+        android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/menu_action_new_document_line"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />

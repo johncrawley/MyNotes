@@ -18,4 +18,8 @@ public class ListItem {
     public long getId(){
         return this.id;
     }
+
+    public void setName(String name){
+        this.name = name;
+    }
 }

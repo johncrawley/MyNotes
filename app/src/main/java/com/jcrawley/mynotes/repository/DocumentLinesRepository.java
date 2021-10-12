@@ -7,7 +7,7 @@ import java.util.List;
 public interface DocumentLinesRepository {
    List<ListItem> getDocumentLines(long documentId);
    void add(String contents, long documentId);
-   void edit(long id, String contents);
+   void update(long lineId, long documentId, String contents);
    void delete(long id);
    void deleteAllWithDocumentId(long documentId);
    void deleteAllWithCategoryId(long categoryId);

@@ -122,9 +122,17 @@ public class ListAdapterHelper {
         arrayAdapter.remove(listItem);
     }
 
+
     public void clearSelection(){
         list.clearChoices();
         list.clearFocus();
+        list.refreshDrawableState();
         arrayAdapter.notifyDataSetChanged();
     }
+
+
+    public ListItem getSelectedItem(){
+        return (ListItem)list.getSelectedItem();
+    }
+
 }

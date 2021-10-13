@@ -28,11 +28,9 @@ import java.util.List;
 
 public class FileEditActivity extends AppCompatActivity implements CustomDialogCloseListener {
 
-
     private DocumentLinesRepository documentLinesRepository;
     private long documentId;
     private ListAdapterHelper listAdapterHelper;
-    private EditText lineEditText;
     private EditDocumentViewModel viewModel;
 
     FileHandler fileHandler;
@@ -42,6 +40,7 @@ public class FileEditActivity extends AppCompatActivity implements CustomDialogC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_edit);
+        setTitle(getIntent().getStringExtra(FilesListActivity.DOCUMENT_NAME_TAG));
         fileHandler = new FileHandler(this);
         setupLineEditText();
         viewModel = new ViewModelProvider(this).get(EditDocumentViewModel.class);
@@ -55,7 +54,7 @@ public class FileEditActivity extends AppCompatActivity implements CustomDialogC
 
 
     public void setupLineEditText(){
-        lineEditText = findViewById(R.id.editTextFileContents);
+        EditText lineEditText = findViewById(R.id.editTextFileContents);
         lineEditText.setText(fileHandler.getFileContents());
     }
 
@@ -67,19 +66,12 @@ public class FileEditActivity extends AppCompatActivity implements CustomDialogC
 
 
      private void setupList(){
-
          ListView documentLinesList = findViewById(R.id.documentLinesList);
          listAdapterHelper = new ListAdapterHelper(this, documentLinesList,
-                 listItem -> {
-                     viewModel.selectedListItem = listItem;
-                     log("setupList() clicked listItem, viewModel selectedListItem contents is now: " + viewModel.selectedListItem.getName());
-                 },
+                 listItem -> viewModel.selectedListItem = listItem,
                  listItem -> {});
      }
 
-     private void log(String msg){
-        System.out.println("^^^ FileEditActivity: " + msg);
-     }
 
     public void setupDialogDimensions(){
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -87,6 +79,7 @@ public class FileEditActivity extends AppCompatActivity implements CustomDialogC
         viewModel.dialogWidth =(int)(displayMetrics.widthPixels /1.5f);
         viewModel.dialogHeight=(int)(displayMetrics.heightPixels / 2f);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -166,7 +159,6 @@ public class FileEditActivity extends AppCompatActivity implements CustomDialogC
 
         configureDialogFragment.show(ft, "dialog");
     }
-
 
 
 }

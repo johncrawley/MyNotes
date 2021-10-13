@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.jcrawley.mynotes.list.ListItem;
 import com.jcrawley.mynotes.viewModel.EditDocumentViewModel;
-
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -59,15 +55,9 @@ public class EditLineDialogFragment extends DialogFragment {
     public void onResume(){
         super.onResume();
         if(viewModel == null || viewModel.selectedListItem == null){
-            log("onResume() viewModel or selectedItem is null!");
             return;
         }
         updateLineEditText.setText(viewModel.selectedListItem.getName());
-    }
-
-
-    private void log(String msg){
-        System.out.println("^^^ EditLineDialogFragment: " + msg);
     }
 
 

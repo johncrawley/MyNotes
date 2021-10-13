@@ -37,6 +37,7 @@ public class FilesListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_files_list);
         Intent intent = getIntent();
         String categoryName = intent.getStringExtra(MainActivity.CATEGORY_NAME_TAG);
+        setTitle(categoryName);
         categoryId = intent.getLongExtra(MainActivity.CATEGORY_ID_TAG, -1);
         documentRepository = new DocumentRepositoryImpl(this);
         ListView categoryList = findViewById(R.id.categoryList);

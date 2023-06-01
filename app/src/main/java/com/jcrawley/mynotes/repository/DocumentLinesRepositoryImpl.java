@@ -34,9 +34,7 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
             cursor = db.rawQuery(query, null);
             while(cursor.moveToNext()){
                 String text = getString(cursor, DbContract.DocumentLinesEntry.COL_CONTENTS);
-                long docId = getLong(cursor, DbContract.DocumentLinesEntry.COL_DOCUMENT_ID);
                 long entryId = getLong(cursor, DbContract.DocumentLinesEntry._ID);
-                System.out.println("getting document line item, contents: " + text + " ,id: " + entryId);
                 listItems.add(new ListItem(text, entryId));
             }
         }
@@ -45,7 +43,6 @@ public class DocumentLinesRepositoryImpl implements DocumentLinesRepository{
             return listItems;
         }
         cursor.close();
-        System.out.println("DocLinesRepository.getDocumentLines() list items size: " + listItems.size());
         return listItems;
     }
 

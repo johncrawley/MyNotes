@@ -11,7 +11,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 3;
-    private static final String DATABASE_NAME = "Quiz.db";
+    private static final String DATABASE_NAME = "MyNotes.db";
 
     private static final String OPENING_BRACKET = " (";
     private static final String CLOSING_BRACKET = " );";
